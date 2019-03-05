@@ -20,7 +20,20 @@ export default class Application
         this.preloader()
     }
 
-    // aantal bestanden vooraf inlezen voor je ze nodig hebt zodat ze er direct zijn als je ze nodig hebt
+    async preloader() {
+        console.info('Preloading source code for shaders')
+        await fetch('./assets/glsl/vertex-shader.glsl')
+            .then(response => response.text())
+            .then(source => this.shaderSources.vertex = source)
+            .catch(error => console.error(error.message))
+        await fetch('./assets/glsl/fragment-shader.glsl')
+            .then(response => response.text())
+            .then(source => this.shaderSources.fragment = source)
+            .catch(error => console.error(error.message))
+        this.run()
+    }
+
+    /* aantal bestanden vooraf inlezen voor je ze nodig hebt zodat ze er direct zijn als je ze nodig hebt
     async preloader() { // progr w uitgevoerd, preloader w gestart en we gaan wachten tot we de fetch hebben uitgevoerd
         console.log('Preloader')
         await fetch('assets/glsl/vertex-shader.glsl')
@@ -29,11 +42,12 @@ export default class Application
         await fetch('assets/glsl/fragment-shader.glsl')
             .then(source => this.shaderSources.fragment = source) // tekst die in bestand staat
             .catch(error => console.error(error.message))
-    }
+    }*/
 
     run() {
-        new Canvas(document.body.clientWidth, 
-            document.body.clientHeight, 
-            this.shaderSources)
+        const width = 600
+        const height = 480
+
+        new Canvas(width, height, this.shaderSources)
     }
 }
